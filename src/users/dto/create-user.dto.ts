@@ -6,9 +6,12 @@ export class CreateUserDto {
   })
   name: string;
 
-  @IsEmail({}, {
-    message: 'Email inválido.',
-  })
+  @IsEmail(
+    {},
+    {
+      message: 'Informe um e-mail válido.',
+    },
+  )
   email: string;
 
   @MinLength(6, {
