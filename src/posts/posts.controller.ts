@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -36,8 +37,14 @@ export class PostsController {
   }
 
   @Get()
-  async findAll() {
-    return await this.postsService.findAll();
+  async findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ) {
+    return await this.postsService.findAll(
+      Number(page),
+      Number(limit),
+    );
   }
 
   @Get(':id')
@@ -52,7 +59,10 @@ export class PostsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePostDto: UpdatePostDto,
   ) {
-    return await this.postsService.update(id, updatePostDto);
+    return await this.postsService.update(
+      id,
+      updatePostDto,
+    );
   }
 
   @Delete(':id')
