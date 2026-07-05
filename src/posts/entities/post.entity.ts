@@ -7,6 +7,8 @@ import {
 } from 'typeorm';
 
 import { User } from '../../users/entities/user.entity/user.entity';
+import { OneToMany } from 'typeorm';
+import { Comment } from '../../comments/entities/comment.entity';
 
 @Entity('posts')
 export class Post {
@@ -31,4 +33,7 @@ export class Post {
 
   @CreateDateColumn()
   createdAt!: Date;
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments!: Comment[];
 }
