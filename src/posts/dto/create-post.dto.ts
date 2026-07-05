@@ -1,15 +1,18 @@
 import { IsNotEmpty, MinLength } from 'class-validator';
 
 export class CreatePostDto {
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message: 'O título é obrigatório.',
+  })
   title: string;
 
-  @MinLength(50)
+  @MinLength(50, {
+    message: 'O conteúdo deve possuir no mínimo 50 caracteres.',
+  })
   content: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message: 'O slug é obrigatório.',
+  })
   slug: string;
-
-  @IsNotEmpty()
-  authorId: number;
 }

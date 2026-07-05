@@ -22,10 +22,13 @@ export class PostsService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async create(createPostDto: CreatePostDto): Promise<Post> {
+  async create(
+    createPostDto: CreatePostDto,
+    userId: number,
+  ): Promise<Post> {
     const author = await this.usersRepository.findOne({
       where: {
-        id: createPostDto.authorId,
+        id: userId,
       },
     });
 

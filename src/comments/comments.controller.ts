@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 
@@ -25,9 +26,13 @@ export class CommentsController {
 
   @Post()
   async create(
+    @Req() req,
     @Body() createCommentDto: CreateCommentDto,
   ) {
-    return await this.commentsService.create(createCommentDto);
+    return await this.commentsService.create(
+      createCommentDto,
+      req.user.id,
+    );
   }
 
   @Get()
@@ -47,7 +52,10 @@ export class CommentsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
-    return await this.commentsService.update(id, updateCommentDto);
+    return await this.commentsService.update(
+      id,
+      updateCommentDto,
+    );
   }
 
   @Delete(':id')

@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 
@@ -25,9 +26,13 @@ export class PostsController {
 
   @Post()
   async create(
+    @Req() req,
     @Body() createPostDto: CreatePostDto,
   ) {
-    return await this.postsService.create(createPostDto);
+    return await this.postsService.create(
+      createPostDto,
+      req.user.id,
+    );
   }
 
   @Get()

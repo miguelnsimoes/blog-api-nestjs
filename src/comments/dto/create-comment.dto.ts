@@ -1,4 +1,4 @@
-import { IsNotEmpty, MinLength } from 'class-validator';
+import { IsInt, IsNotEmpty, MinLength } from 'class-validator';
 
 export class CreateCommentDto {
   @IsNotEmpty({
@@ -9,12 +9,7 @@ export class CreateCommentDto {
   })
   content: string;
 
-  @IsNotEmpty({
-    message: 'O autor é obrigatório.',
-  })
-  authorId: number;
-
-  @IsNotEmpty({
+  @IsInt({
     message: 'O post é obrigatório.',
   })
   postId: number;

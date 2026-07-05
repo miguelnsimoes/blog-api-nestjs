@@ -26,10 +26,13 @@ export class CommentsService {
     private readonly postsRepository: Repository<Post>,
   ) {}
 
-  async create(createCommentDto: CreateCommentDto): Promise<Comment> {
+  async create(
+    createCommentDto: CreateCommentDto,
+    userId: number,
+  ): Promise<Comment> {
     const author = await this.usersRepository.findOne({
       where: {
-        id: createCommentDto.authorId,
+        id: userId,
       },
     });
 
