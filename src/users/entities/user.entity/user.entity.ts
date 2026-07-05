@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
+import { Exclude } from 'class-transformer';
 
 import { Post } from '../../../posts/entities/post.entity';
 import { Comment } from '../../../comments/entities/comment.entity';
@@ -26,6 +27,7 @@ export class User {
   })
   email!: string;
 
+  @Exclude()
   @Column()
   password!: string;
 
