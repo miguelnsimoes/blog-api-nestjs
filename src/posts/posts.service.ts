@@ -46,12 +46,31 @@ export class PostsService {
     return await this.postsRepository.save(post);
   }
 
-  async findAll(): Promise<Post[]> {
-    return await this.postsRepository.find({
-      relations: {
-        author: true,
-      },
-    });
+  async findAll(
+    page = 1,
+    limit = 10,
+  ) {
+    const [posts, total] =
+      await this.postsRepository.findAndCount({
+        relations: {
+          author: true,
+        },
+
+        skip: (page - 1) * limit,
+        take: limit,
+
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+
+    return {
+      data: posts,
+      total,
+      page,
+      limit,
+      lastPage: Math.ceil(total / limit),
+    };
   }
 
   async findOne(id: number): Promise<Post> {
