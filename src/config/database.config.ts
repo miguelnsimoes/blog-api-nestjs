@@ -1,14 +1,17 @@
+import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-export const databaseConfig: TypeOrmModuleOptions = {
+export const databaseConfig = (
+  config: ConfigService,
+): TypeOrmModuleOptions => ({
   type: 'postgres',
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
+  host: config.get<string>('DB_HOST'),
+  port: Number(config.get('DB_PORT')),
+  username: config.get<string>('DB_USERNAME'),
+  password: config.get<string>('DB_PASSWORD'),
+  database: config.get<string>('DB_DATABASE'),
 
   autoLoadEntities: true,
 
-  synchronize: true,
-};
+  synchronize: config.get<string>('NODE_ENV') !== 'production',
+});
