@@ -75,11 +75,3 @@ http://localhost:3000
 - `PATCH /comments/:id`
 - `DELETE /comments/:id`
 
-## Scripts úteis
-
-- `npm run start:dev` - iniciar em modo de desenvolvimento
-- `npm run build` - compilar o projeto
-- `npm run lint` - rodar ESLint
-- `npm run test` - rodar testes
-
-Pronto! Basta seguir esses passos para clonar, configurar e testar o projeto no ambiente local do seu colega.
