@@ -63,6 +63,13 @@ export class UsersService {
   ): Promise<User> {
     const user = await this.findOne(id);
 
+    if (updateUserDto.password) {
+      updateUserDto.password = await bcrypt.hash(
+        updateUserDto.password,
+        10,
+      );
+    }
+
     Object.assign(user, updateUserDto);
 
     return await this.usersRepository.save(user);
