@@ -1,4 +1,6 @@
-import {
+﻿import {
+  ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -43,7 +45,20 @@ export class PostsService {
       author,
     });
 
-    return await this.postsRepository.save(post);
+    try {
+      return await this.postsRepository.save(post);
+    } catch (error: any) {
+      if (
+        error?.code === '23505' &&
+        error?.detail?.includes('(slug)=')
+      ) {
+        throw new ConflictException(
+          'Já existe um post com este slug.',
+        );
+      }
+
+      throw error;
+    }
   }
 
   async findAll(
@@ -91,16 +106,29 @@ export class PostsService {
   async update(
     id: number,
     updatePostDto: UpdatePostDto,
+    userId: number,
   ): Promise<Post> {
     const post = await this.findOne(id);
+
+    if (post.author.id !== userId) {
+      throw new ForbiddenException(
+        'Você não tem permissão para alterar este post.',
+      );
+    }
 
     Object.assign(post, updatePostDto);
 
     return await this.postsRepository.save(post);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number, userId: number): Promise<void> {
     const post = await this.findOne(id);
+
+    if (post.author.id !== userId) {
+      throw new ForbiddenException(
+        'Você não tem permissão para remover este post.',
+      );
+    }
 
     await this.postsRepository.remove(post);
   }

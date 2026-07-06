@@ -1,4 +1,5 @@
-import {
+﻿import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -87,16 +88,31 @@ export class CommentsService {
   async update(
     id: number,
     updateCommentDto: UpdateCommentDto,
+    userId: number,
   ): Promise<Comment> {
     const comment = await this.findOne(id);
 
-    Object.assign(comment, updateCommentDto);
+    if (comment.author.id !== userId) {
+      throw new ForbiddenException(
+        'Você não tem permissão para alterar este comentário.',
+      );
+    }
+
+    if (updateCommentDto.content) {
+      comment.content = updateCommentDto.content;
+    }
 
     return await this.commentsRepository.save(comment);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number, userId: number): Promise<void> {
     const comment = await this.findOne(id);
+
+    if (comment.author.id !== userId) {
+      throw new ForbiddenException(
+        'Você não tem permissão para remover este comentário.',
+      );
+    }
 
     await this.commentsRepository.remove(comment);
   }

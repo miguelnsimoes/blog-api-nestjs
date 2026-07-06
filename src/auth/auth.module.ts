@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as jwt from 'jsonwebtoken';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
@@ -14,11 +16,19 @@ import { UsersModule } from '../users/users.module';
 
     PassportModule,
 
-    JwtModule.register({
-      secret: 'blog-api-secret',
-      signOptions: {
-        expiresIn: '1h',
-      },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret:
+          configService.get<string>('JWT_SECRET') ??
+          'blog-api-secret',
+        signOptions: {
+          expiresIn:
+            configService.get<jwt.SignOptions['expiresIn']>('JWT_EXPIRES_IN') ??
+            '1h',
+        },
+      }),
     }),
   ],
 
